@@ -1,0 +1,8 @@
+node_modules
+
+*-lock.json
+
+*.min.*
+dist
+js
+css

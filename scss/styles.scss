@@ -1,0 +1,268 @@
+@import "../node_modules/normalize.css/normalize.css";
+
+* {
+	box-sizing: border-box;
+}
+
+::placeholder {
+	color: white;
+}
+
+.container {
+	max-width: 1700px;
+	padding: 0 15px;
+	margin: 0 auto;
+	position: relative;
+}
+
+html {
+	height: 100%;
+}
+body {
+	min-height: 100%;
+}
+
+body {
+	background: black;
+	color: white;
+	font-size: 20px;
+	position: relative;
+	font-family: 'Ubuntu Condensed', sans-serif;
+	overflow-x: hidden;
+	padding-top: 75px;
+	padding-bottom: 50px;
+}
+
+.wrapper {
+	padding: 0 5px;
+}
+
+a#logo.logo {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 0;
+	width: 100%;
+	display: block;
+	padding: 15px 5px;
+	color: white;
+	font-size: 24px;
+	text-align: center;
+	text-decoration: none;
+	background: black;
+	z-index: 1000;
+	.caps {
+		text-transform: uppercase;
+	}
+	.small {
+		font-size: .6em;
+	}
+}
+
+form#signin.signin {
+	max-width: 300px;
+	padding: 0 5px;
+	margin: 0 auto;
+	position: relative;
+	div.field-row {
+		padding: 5px 0;
+		input.input-text {
+			border: none;
+			border-bottom: 1px solid rgba( white, .1 );
+			background: none;
+			padding: 10px;
+			display: block;
+			width: 100%;
+			color: white;
+			outline: none;
+			font-family: 'Ubuntu Condensed', sans-serif;
+		}
+		input.input-submit {
+			border: none;
+			background: none;
+			padding: 10px;
+			display: block;
+			width: 100%;
+			color: white;
+			outline: none;
+			text-transform: uppercase;
+			font-size: 12px;
+			font-family: 'Ubuntu Condensed', sans-serif;
+		}
+	}
+}
+
+@keyframes loading {
+	from {}
+	50% {
+		right: 0;
+		left: 90%;
+	}
+	to {
+		
+	}
+}
+
+form#profile.profile {
+	max-width: 300px;
+	padding: 0 5px;
+	margin: 0 auto;
+	position: relative;
+	div.field-row {
+		padding: 5px 0;
+		position: relative;
+		overflow: hidden;
+		.input-text {
+			border: none;
+			border-bottom: 1px solid rgba( white, .1 );
+			background: none;
+			padding: 10px;
+			display: block;
+			width: 100%;
+			color: white;
+			outline: none;
+			font-family: 'Ubuntu Condensed', sans-serif;
+		}
+		select.input-text {
+			background: black;
+			color: white;
+			&:disabled {
+				display: none;
+			}
+		}
+		textarea {
+			min-height: 100px;
+		}
+		input.input-submit {
+			border: none;
+			background: none;
+			padding: 10px;
+			display: block;
+			width: 100%;
+			color: white;
+			outline: none;
+			text-transform: uppercase;
+			font-size: 12px;
+			font-family: 'Ubuntu Condensed', sans-serif;
+			&.red {
+				color: red;
+			}
+		}
+		div#map.map {
+			height: 350px;
+			transition: .3s ease-in-out;
+			&.refresh {
+				box-shadow: 0 0 20px 0 red;
+			}
+		}
+	}
+	.social {
+		margin: 15px 0;
+	}
+	&.loading {
+		div.field-row {
+			&:before {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 0;
+				right: -100%;
+				bottom: 0;
+				left: 0;
+				background: rgba( blue, .5 );
+			}
+		}
+	}
+}
+
+input[ type="submit" ],
+input[ type="button" ] {
+	cursor: pointer;
+}
+
+footer#footer.footer {
+	position: fixed;
+	z-index: 1000;
+	transition: .3s ease-in-out;
+	right: 0;
+	bottom: -50px;
+	left: 0;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 1px;
+	background: black;
+	&.signed {
+		bottom: 0;
+	}
+	a.button {
+		display: block;
+		height: 50px;
+		text-decoration: none;
+		color: transparent;
+		font-weight: bold;
+		text-align: center;
+		box-shadow: 0 0 0 1px rgba( white, .1 );
+		color: white;
+		transition: .3s ease-in-out;
+		&.selected {
+			background: lighten( black, 10 );
+		}
+		&:before {
+			content: '';
+			display: inline-block;
+			vertical-align: middle;
+			height: 100%;
+		}
+	}
+}
+
+.swiper-container {
+	.swiper-wrapper {
+		.swiper-slide {
+			min-height: calc( 100vh - 75px - 50px - 15px );
+			&.loading {
+				&:before {
+					content: '';
+					display: block;
+					position: absolute;
+					top: 0;
+					right: 0;
+					left: 37%;
+					width: 24%;
+					height: 3px;
+					background: rgba( red, .3 );
+					transition: .3s ease-in-out;
+					animation: blink 5s ease-in-out infinite;
+					border-radius: 2px;
+				}
+			}
+		}
+	}
+}
+
+@keyframes blink {
+	from {
+
+	}
+	50% {
+		
+	}
+	to {
+		opacity: 0;
+		width: 100%;
+		left: 0;
+	}
+}
+
+small {
+	font-size: .5em;
+}
+
+.hidden {
+	display: none !important;
+}
+
+p.key {
+	text-align: center;
+}

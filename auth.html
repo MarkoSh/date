@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html lang="ru-RU">
+<head>
+	<meta charset="utf-8">
+
+	<title>Dateonymous - просто отличный сайт для анонимных знакомств</title>
+	<meta name="description" content="Dateonymous - просто отличный сайт для анонимных знакомств">
+	<meta name="author" content="Mark">
+
+	<meta name="yandex-verification" content="19510a6674134efc" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+	<meta name="theme-color" content="black" />
+
+	<link href="//fonts.googleapis.com/css?family=Ubuntu+Condensed&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" />
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css" />
+
+	<link rel="stylesheet" href="/static/styles.min.css">
+
+</head>
+
+<body>
+
+	<div class="container wrapper">
+		<a href="//dateonymous.com/" id="logo" class="logo">
+			<div class="caps">Dateonymous</div>
+			<div class="small">анонимные знакомства</div>
+		</a>
+		
+		<p class="key">Ваш ключ доступа {{ KEY }}</p>
+	</div>
+
+	<script>
+		localStorage.setItem( 'key', '{{ KEY }}' );
+		window.location.href = '/';
+	</script>
+	<script src="/static/scripts.min.js"></script>
+</body>
+</html>

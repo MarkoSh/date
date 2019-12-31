@@ -1,0 +1,129 @@
+<!doctype html>
+
+<html lang="ru-RU">
+<head>
+	<meta charset="utf-8">
+
+	<title>Dateonymous - просто отличный сайт для анонимных знакомств</title>
+	<meta name="description" content="Dateonymous - просто отличный сайт для анонимных знакомств">
+	<meta name="author" content="Mark">
+
+	<meta name="yandex-verification" content="19510a6674134efc" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+
+	<meta name="theme-color" content="black" />
+
+	<link href="//fonts.googleapis.com/css?family=Ubuntu+Condensed&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" />
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.min.css" />
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css" />
+
+	<link rel="stylesheet" href="/static/styles.min.css">
+
+</head>
+
+<body>
+
+	<div class="container wrapper">
+		<a href="//dateonymous.com/" id="logo" class="logo">
+			<div class="caps">Dateonymous</div>
+			<div class="small">анонимные знакомства</div>
+		</a>
+
+		<form action="/signin" method="post" id="signin" class="signin hidden">
+			<div class="field-row"><input type="text" name="name" id="name" class="input-text" placeholder="Имя:" required></div>
+			<div class="field-row"><input type="email" name="email" id="email" class="input-text" placeholder="Email:" required></div>
+			<div class="field-row"><input type="submit" value="Регистрация" class="input-submit" data-default_text="Регистрация"></div>
+		</form>
+
+		<div id="swiper" class="swiper-container hidden">
+			<div class="swiper-wrapper">
+				<div id="profile-slide" class="swiper-slide">
+					<form action="/profile" method="post" id="profile" class="profile">
+						<div class="field-row"><input type="text" name="name" id="name_" class="input-text" placeholder="Имя:"></div>
+						<div class="field-row"><input type="date" name="bd" id="bd" class="input-text" max="2001-01-31" placeholder="День рождения:"></div>
+						<div class="field-row">
+							<select name="radius" id="radius" class="input-text" placeholder="Искать в радиусе:">
+								<option value="" disabled selected>Искать в радиусе:</option>
+								<option value="1">1 км</option>
+								<option value="2">2 км</option>
+								<option value="3">3 км</option>
+								<option value="4">4 км</option>
+								<option value="5">5 км</option>
+							</select>
+							<input type="hidden" name="coords" id="coords">
+							<div id="map" class="map refresh"></div>
+						</div>
+						<div class="field-row">
+							<select name="sex" id="sex" class="input-text" placeholder="Пол:">
+								<option value="" disabled selected>Пол</option>
+								<option value="1">Мужской</option>
+								<option value="2">Женский</option>
+							</select>
+						</div>
+						<div class="field-row">
+							<select name="who" id="who" class="input-text" placeholder="Ищу:">
+								<option value="" disabled selected>Ищу</option>
+								<option value="1">Ищу парня</option>
+								<option value="2">Ищу девушку</option>
+								<option value="3">Ищу парня и девушку</option>
+							</select>
+						</div>
+						<div class="field-row">
+							<select name="for" id="for" class="input-text" placeholder="Для:">
+								<option value="" disabled selected>Я здесь для:</option>
+								<option value="1">Я здесь для отношений</option>
+								<option value="2">Я здесь для секса</option>
+								<option value="3">Я здесь для вирта</option>
+								<option value="4">Я здесь для МЖМ</option>
+								<option value="5">Я здесь для ЖМЖ</option>
+								<option value="6">Я здесь для генгбенга</option>
+								<option value="7">Я здесь для буккаке</option>
+							</select>
+						</div>
+						<div class="field-row">
+							<textarea name="about" id="about" class="input-text" placeholder="Обо мне:"></textarea>
+						</div>
+						<div class="social">
+							<div class="field-row"><input type="text" name="vk" id="vk" class="input-text" placeholder="ВКонтакте:"></div>
+							<div class="field-row"><input type="text" name="ig" id="ig" class="input-text" placeholder="Instagram:"></div>
+							<div class="field-row"><input type="text" name="tg" id="tg" class="input-text" placeholder="Telegram:"></div>
+							<div class="field-row"><input type="text" name="tw" id="tw" class="input-text" placeholder="Twitter:"></div>
+							<div class="field-row"><input type="text" name="mysw" id="mysw" class="input-text" placeholder="MySW:"></div>
+						</div>
+						<div class="field-row hidden">
+							<input type="submit" value="Сохранить" class="input-submit">
+						</div>
+						<div class="field-row">
+							<input type="button" id="delete" value="Удалить аккаунт" class="input-submit red">
+						</div>
+					</form>
+				</div>
+				<div id="feed-slide" class="swiper-slide">
+					feed
+				</div>
+				<div id="im-slide" class="swiper-slide">
+					im
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer id="footer" class="footer">
+		<a href="#feed" class="button selected" title="Лента"><i class="fas fa-bullseye"></i></a>
+		<a href="#im" class="button" title="Сообщения"><i class="fas fa-comment"></i></a>
+		<a href="#profile" class="button" title="Профиль"><i class="fas fa-user"></i></a>
+	</footer>
+
+	<script src="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/fontawesome.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
+	<script src="//api-maps.yandex.ru/2.1/?apikey=ca6c3252-5299-4553-9528-b6512ec72635&lang=ru_RU&mode=release&onload=map_init&onerror=map_error" type="text/javascript"></script>
+
+	<script src="/static/scripts.min.js"></script>
+</body>
+</html>
