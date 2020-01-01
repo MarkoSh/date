@@ -90,7 +90,6 @@ declare let Swiper: any;
 						} );
 					}
 					getProfile();
-					maploader();
 					const del = <HTMLInputElement> dom.getElementById( 'delete' );
 					del.onclick = e => {
 						const answer = prompt( 'Вы уверены, что хотите удалить аккаунт? (Да/Нет)' );
@@ -165,41 +164,87 @@ declare let Swiper: any;
 
 } )( document, document.body, localStorage, sessionStorage );
 
-let map, ymaps;
-
-function maploader() {
-	const coords_input = <HTMLInputElement> document.getElementById( 'coords' );
-	const form = coords_input.form;
-	const map_el = document.getElementById( 'map' );
-	map_el.classList.add( 'refresh' );
-	setTimeout( () => {
-		if ( ! map ) map = new ymaps.Map( 'map', {
-			center: [ 55.76, 37.64 ],
-			controls: [],
-			zoom: 14
-		} );
-		ymaps.geolocation.get( {
-			mapStateAutoApply: true
-		} ).then( ( result: any ) => {
-			const coords = result.geoObjects.get( 0 ).geometry.getCoordinates();
-			map.setCenter( coords, 14, { 
-				duration: 300
-			} );
-			map_el.classList.remove( 'refresh' );
-			coords_input.value = JSON.stringify( coords );
-			form.dispatchEvent( new Event( 'submit_coords' ) );
-			setTimeout( maploader, 60000 );
-		} );
-	}, 1000 );
-}
+let tos: any = [];
 
 function map_init( ymaps: any ) {
-	if ( ! navigator.geolocation ) {
-		alert( 'Ваш браузер не поддерижвает геолокацию' );
-		const map = document.getElementById( 'map' );
-		map.parentElement.classList.add( 'hidden' );
-	} else {
-		maploader();
+	tos.forEach( ( to ) => clearInterval( to ) );
+	tos = [];
+	let ymap: any 		= false;
+	const coords_input 	= <HTMLInputElement> document.getElementById( 'coords' );
+	const radius	 	= <HTMLInputElement> document.getElementById( 'radius' );
+	const form 			= coords_input.form;
+	const map 			= <HTMLInputElement> document.getElementById( 'map' );
+	const placemark		= new ymaps.Placemark( [ 0, 0 ], {}, {
+		preset: 'islands#blueCircleDotIconWithCaption'
+	} );
+	const circle		= new ymaps.Circle( [ [ 0, 0 ], 1000 ], {}, {
+		fillColor	: '#DB709350',
+		strokeColor	: '#DB709350',
+		strokeWidth	: 1
+	} );
+	radius.onchange = e => {
+		const value = parseInt( radius.value ) * 1000;
+		circle.geometry.setRadius( value );
+		ymap.setZoom( 13 - parseInt( radius.value ) / 2 );
+	};
+	if ( navigator.geolocation ) {
+		navigator.geolocation.watchPosition( ( position: any ) => {
+			tos.forEach( ( to ) => clearInterval( to ) );
+			tos = [];
+			const center = [
+				position.coords.latitude,
+				position.coords.longitude
+			];
+			coords_input.value = JSON.stringify( center );
+			form.dispatchEvent( new Event( 'submit_coords' ) );
+			if ( ymap ) {
+				ymap.setCenter( center );
+				ymap.geoObjects.remove( placemark );
+				ymap.geoObjects.remove( circle );
+			} else {
+				ymap = new ymaps.Map( map, {
+					controls: [],
+					center: center,
+					zoom: 13
+				} );
+			}
+			placemark.geometry.setCoordinates( center );
+			circle.geometry.setCoordinates( center );
+			ymap.geoObjects.add( placemark );
+			ymap.geoObjects.add( circle );
+		}, ( error: any ) => {
+			console.error( error );
+			const location = ymaps.geolocation;
+			function drawMap() {
+				location.get( {
+					mapStateAutoApply: true
+				} ).then( ( result: any ) => {
+					const center = result.geoObjects.get(0).geometry.getCoordinates();
+					coords_input.value = JSON.stringify( center );
+					form.dispatchEvent( new Event( 'submit_coords' ) );
+					if ( ymap ) {
+						ymap.setCenter( center );
+						ymap.geoObjects.remove( placemark );
+						ymap.geoObjects.remove( circle );
+					} else {
+						ymap = new ymaps.Map( map, {
+							controls: [],
+							center: center,
+							zoom: 13
+						} );
+					}
+					placemark.geometry.setCoordinates( center );
+					circle.geometry.setCoordinates( center );
+					ymap.geoObjects.add( placemark );
+					ymap.geoObjects.add( circle );
+					setTimeout( drawMap, 5000 );
+				}, ( error: any ) => {
+					console.error( error );
+					setTimeout( drawMap, 5000 );
+				} );
+			}
+			drawMap();
+		} );
 	}
 }
 function map_error( error: any ) {
