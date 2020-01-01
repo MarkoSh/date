@@ -1,5 +1,6 @@
 declare let axios: any;
 declare let Swiper: any;
+declare let ymaps: any;
 
 ( ( dom, body, ls, ss ) => {
 
@@ -79,12 +80,15 @@ declare let Swiper: any;
 						bd.max = date.toISOString().substring( 0, 10 );
 						axios.get( '/profile' + key ).then( ( response: any ) => {
 							if ( response.data.status ) {
-
 								Object.keys( response.data.data ).forEach( ( key: any ) => {
 									const element = <HTMLInputElement> profile.querySelector( '#' + key );
 									if ( element ) element.value = decodeURI( response.data.data[ key ] );
 								} );
+								const coords_input 	= <HTMLInputElement> document.getElementById( 'coords' );
+								coords_input.value = JSON.stringify( [ response.data.data.lat, response.data.data.lng ] );
 							} else console.error( 'Ошибка загрузки профиля' );
+
+							ymaps.ready( map_init );
 						} ).catch( ( error: any ) => {
 							console.error( error );
 						} );
@@ -164,90 +168,56 @@ declare let Swiper: any;
 
 } )( document, document.body, localStorage, sessionStorage );
 
-let tos: any = [];
-
-function map_init( ymaps: any ) {
-	tos.forEach( ( to ) => clearInterval( to ) );
-	tos = [];
-	let ymap: any 		= false;
+function map_init( ymaps: any = false ) {
 	const coords_input 	= <HTMLInputElement> document.getElementById( 'coords' );
 	const radius	 	= <HTMLInputElement> document.getElementById( 'radius' );
+	const radius_		= parseInt( radius.value );
 	const value 		= parseInt( radius.value ) * 1000;
 	const form 			= coords_input.form;
 	const map 			= <HTMLInputElement> document.getElementById( 'map' );
-	const placemark		= new ymaps.Placemark( [ 0, 0 ], {}, {
+	let center 			= [ 0, 0 ];
+	if ( coords_input.value ) center = JSON.parse( coords_input.value );
+	const ymap 			= new ymaps.Map( map, {
+		controls: [],
+		center: center,
+		zoom: 13
+	} );
+	if ( 1 < radius_ && 3 > radius_ ) ymap.setZoom( 12 );
+	if ( 2 < radius_ && 4 > radius_ ) ymap.setZoom( 11 );
+	if ( 3 < radius_ ) ymap.setZoom( 10 );
+
+	const placemark		= new ymaps.Placemark( center, {}, {
 		preset: 'islands#blueCircleDotIconWithCaption'
 	} );
-	const circle		= new ymaps.Circle( [ [ 0, 0 ], value ], {}, {
+	const circle		= new ymaps.Circle( [ center, value ], {}, {
 		fillColor	: '#DB709350',
 		strokeColor	: '#DB709350',
 		strokeWidth	: 1
 	} );
+	ymap.geoObjects.add( placemark );
+	ymap.geoObjects.add( circle );
 	radius.onchange = e => {
-		const value = parseInt( radius.value ) * 1000;
+		const radius	 	= <HTMLInputElement> document.getElementById( 'radius' );
+		const radius_		= parseInt( radius.value );
+		const value 		= parseInt( radius.value ) * 1000;
 		circle.geometry.setRadius( value );
-		ymap.setZoom( 13 - parseInt( radius.value ) / 2 );
+		if ( 1 < radius_ && 3 > radius_ ) return ymap.setZoom( 12 );
+		if ( 2 < radius_ && 3 >= radius_ ) return ymap.setZoom( 11 );
+		if ( 3 < radius_ ) return ymap.setZoom( 10 );
+		ymap.setZoom( 13 );
 	};
-	if ( navigator.geolocation ) {
-		navigator.geolocation.watchPosition( ( position: any ) => {
-			tos.forEach( ( to ) => clearInterval( to ) );
-			tos = [];
-			const center = [
-				position.coords.latitude,
-				position.coords.longitude
-			];
-			coords_input.value = JSON.stringify( center );
-			form.dispatchEvent( new Event( 'submit_coords' ) );
-			if ( ymap ) {
-				ymap.setCenter( center );
-				ymap.geoObjects.remove( placemark );
-				ymap.geoObjects.remove( circle );
-			} else {
-				ymap = new ymaps.Map( map, {
-					controls: [],
-					center: center,
-					zoom: 13 - parseInt( radius.value ) / 2
-				} );
-			}
+
+	setInterval( () => {
+		const location = ymaps.geolocation.get();
+		location.then( ( result: any ) => {
+			const center = result.geoObjects.get( 0 ).geometry.getCoordinates();
 			placemark.geometry.setCoordinates( center );
 			circle.geometry.setCoordinates( center );
-			ymap.geoObjects.add( placemark );
-			ymap.geoObjects.add( circle );
+			ymap.setCenter( center );
+			coords_input.value = JSON.stringify( center );
+			form.dispatchEvent( new Event( 'submit_coords' ) );
 		}, ( error: any ) => {
 			console.error( error );
-			const location = ymaps.geolocation;
-			function drawMap() {
-				location.get( {
-					mapStateAutoApply: true
-				} ).then( ( result: any ) => {
-					const center = result.geoObjects.get(0).geometry.getCoordinates();
-					coords_input.value = JSON.stringify( center );
-					form.dispatchEvent( new Event( 'submit_coords' ) );
-					if ( ymap ) {
-						ymap.setCenter( center );
-						ymap.geoObjects.remove( placemark );
-						ymap.geoObjects.remove( circle );
-					} else {
-						ymap = new ymaps.Map( map, {
-							controls: [],
-							center: center,
-							zoom: 13 - parseInt( radius.value ) / 2
-						} );
-					}
-					placemark.geometry.setCoordinates( center );
-					circle.geometry.setCoordinates( center );
-					ymap.geoObjects.add( placemark );
-					ymap.geoObjects.add( circle );
-					// setTimeout( drawMap, 5000 );
-				}, ( error: any ) => {
-					console.error( error );
-					setTimeout( drawMap, 5000 );
-				} );
-			}
-			drawMap();
 		} );
-	}
-}
-function map_error( error: any ) {
-	console.error( error );
+	}, 5000 );
 }
