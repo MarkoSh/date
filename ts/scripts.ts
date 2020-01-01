@@ -172,12 +172,13 @@ function map_init( ymaps: any ) {
 	let ymap: any 		= false;
 	const coords_input 	= <HTMLInputElement> document.getElementById( 'coords' );
 	const radius	 	= <HTMLInputElement> document.getElementById( 'radius' );
+	const value 		= parseInt( radius.value ) * 1000;
 	const form 			= coords_input.form;
 	const map 			= <HTMLInputElement> document.getElementById( 'map' );
 	const placemark		= new ymaps.Placemark( [ 0, 0 ], {}, {
 		preset: 'islands#blueCircleDotIconWithCaption'
 	} );
-	const circle		= new ymaps.Circle( [ [ 0, 0 ], 1000 ], {}, {
+	const circle		= new ymaps.Circle( [ [ 0, 0 ], value ], {}, {
 		fillColor	: '#DB709350',
 		strokeColor	: '#DB709350',
 		strokeWidth	: 1
@@ -205,7 +206,7 @@ function map_init( ymaps: any ) {
 				ymap = new ymaps.Map( map, {
 					controls: [],
 					center: center,
-					zoom: 13
+					zoom: 13 - parseInt( radius.value ) / 2
 				} );
 			}
 			placemark.geometry.setCoordinates( center );
@@ -230,14 +231,14 @@ function map_init( ymaps: any ) {
 						ymap = new ymaps.Map( map, {
 							controls: [],
 							center: center,
-							zoom: 13
+							zoom: 13 - parseInt( radius.value ) / 2
 						} );
 					}
 					placemark.geometry.setCoordinates( center );
 					circle.geometry.setCoordinates( center );
 					ymap.geoObjects.add( placemark );
 					ymap.geoObjects.add( circle );
-					setTimeout( drawMap, 5000 );
+					// setTimeout( drawMap, 5000 );
 				}, ( error: any ) => {
 					console.error( error );
 					setTimeout( drawMap, 5000 );
