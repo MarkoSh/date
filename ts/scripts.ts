@@ -182,9 +182,8 @@ function map_init( ymaps: any = false ) {
 		center: center,
 		zoom: 13
 	} );
-	if ( 1 < radius_ && 3 > radius_ ) ymap.setZoom( 12 );
-	if ( 2 < radius_ && 4 > radius_ ) ymap.setZoom( 11 );
-	if ( 3 < radius_ ) ymap.setZoom( 10 );
+	if ( 1 < radius_ && 3 >= radius_ ) ymap.setZoom( 12 );
+	if ( 3 < radius_ ) ymap.setZoom( 11 );
 
 	const placemark		= new ymaps.Placemark( center, {}, {
 		preset: 'islands#blueCircleDotIconWithCaption'
@@ -201,9 +200,8 @@ function map_init( ymaps: any = false ) {
 		const radius_		= parseInt( radius.value );
 		const value 		= parseInt( radius.value ) * 1000;
 		circle.geometry.setRadius( value );
-		if ( 1 < radius_ && 3 > radius_ ) return ymap.setZoom( 12 );
-		if ( 2 < radius_ && 3 >= radius_ ) return ymap.setZoom( 11 );
-		if ( 3 < radius_ ) return ymap.setZoom( 10 );
+		if ( 1 < radius_ && 3 >= radius_ ) return ymap.setZoom( 12 );
+		if ( 3 < radius_ ) return ymap.setZoom( 11 );
 		ymap.setZoom( 13 );
 	};
 

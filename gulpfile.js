@@ -18,34 +18,34 @@ const autoprefixer = require( 'gulp-autoprefixer' );
 const cleanCss	= require( 'gulp-clean-css' );
 
 function js() {
-	const compilejs = () =>  src( 'js/scripts.js' )
+	const js = () =>  src( 'js/scripts.js' )
 		.pipe( babel() )
 		.pipe( uglify() )
 		.pipe( rename( {
 			suffix: '.min'
 		} ) )
 		.pipe( dest( 'dist/static/' ) );
-	return gulp.watch( 'js/scripts.js', compilejs );
+	return gulp.watch( 'js/scripts.js', js );
 }
 
 
 function css() {
-	const compilecss = () => src( 'scss/styles.scss' )
-		.pipe( sass().on( 'error', () => console.error( sass.logError ) ) )
+	const css = () => src( 'scss/styles.scss' )
+		.pipe( sass() )
 		.pipe( autoprefixer() )
 		.pipe( cleanCss( { compatibility: 'ie8' } ) )
 		.pipe( rename( {
 			suffix: '.min'
 		} ) )
 		.pipe( dest( 'dist/static/' ) );
-	return gulp.watch( 'scss/styles.scss', compilecss );
+	return gulp.watch( 'scss/styles.scss', css );
 }
 
 function html() {
-	const compilehtml = () => src( '*.html' )
+	const html = () => src( '*.html' )
 		.pipe( htmlmin( { collapseWhitespace: true } ) )
 		.pipe( dest( 'dist/' ) );
-	return gulp.watch( '*.html', compilehtml );
+	return gulp.watch( '*.html', html );
 }
 
 exports.default = parallel( html, js, css );

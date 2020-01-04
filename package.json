@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scss": "sass --watch scss/styles.scss css/styles.css",
-    "minify": "minify css/styles.css > dist/static/styles.min.css & minify js/scripts.js > dist/static/scripts.min.js & minify index.html > dist/index.html & minify auth.html > dist/auth.html & minify no.html > dist/no.html"
+    "tsc": "tsc -p ts/tsconfig.json --watch",
+    "gulp": "gulp"
   },
   "author": "",
   "license": "ISC",
